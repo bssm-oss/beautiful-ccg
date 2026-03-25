@@ -11,15 +11,20 @@ export function classifyTask(prompt: string): { type: TaskType; complexity: "low
   const lower = prompt.toLowerCase();
   const wordCount = prompt.split(/\s+/).length;
 
-  // Find the task type with most keyword matches
+  // Find the task type with most keyword matches.
+  // Tiebreaker: prefer the type whose first matching keyword appears earliest in the prompt.
   let bestType: TaskType = "general";
   let bestScore = 0;
+  let bestFirstPos = Infinity;
 
   for (const [type, keywords] of Object.entries(KEYWORD_MAP) as [TaskType, string[]][]) {
-    const score = keywords.filter(k => lower.includes(k)).length;
-    if (score > bestScore) {
+    const matches = keywords.filter(k => lower.includes(k));
+    const score = matches.length;
+    const firstPos = matches.reduce((min, k) => Math.min(min, lower.indexOf(k)), Infinity);
+    if (score > bestScore || (score === bestScore && score > 0 && firstPos < bestFirstPos)) {
       bestScore = score;
       bestType = type;
+      bestFirstPos = firstPos;
     }
   }
 

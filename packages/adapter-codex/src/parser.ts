@@ -49,6 +49,8 @@ export function parseCodexOutput(stdout: string): CodexParsed {
 
   return {
     content: contentParts.join(""),
+    // Codex NDJSON does not report the model name; hardcoded as default.
+    // Error detection relies on the adapter-level process exitCode, not parser output.
     model: "gpt-5.3-codex",
     exitCode: 0,
     inputTokens,
