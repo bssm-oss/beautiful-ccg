@@ -6,7 +6,7 @@ import type {
   AdapterResult,
   AvailabilityStatus,
 } from "@bccg/adapter-base";
-import { AdapterError, DEFAULT_TIMEOUTS } from "@bccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS, MAX_OUTPUT_SIZE } from "@bccg/adapter-base";
 import { parseCodexOutput } from "./parser.js";
 
 export { parseCodexOutput } from "./parser.js";
@@ -19,10 +19,10 @@ export class CodexAdapter implements ModelAdapter {
 
   async run(prompt: string, options?: RunOptions): Promise<AdapterResult> {
     const depth = Number(process.env.BCCG_DEPTH ?? "0");
-    const args: string[] = ["exec", prompt, "--json", "--full-auto"];
+    const args: string[] = ["exec", prompt, "--json"];
+    if (options?.allowAutonomous) { args.push("--full-auto"); }
 
-    const env: Record<string, string> = {
-      ...(process.env as Record<string, string>),
+    const env = {
       ...(options?.env ?? {}),
       BCCG_DEPTH: String(depth + 1),
     };
@@ -48,7 +48,12 @@ export class CodexAdapter implements ModelAdapter {
       );
     }
 
-    const parsed = parseCodexOutput(result.stdout ?? "");
+    const stdout = result.stdout ?? "";
+    if (stdout.length > MAX_OUTPUT_SIZE) {
+      throw new AdapterError(`codex output exceeded MAX_OUTPUT_SIZE (${MAX_OUTPUT_SIZE} bytes)`, "codex");
+    }
+
+    const parsed = parseCodexOutput(stdout);
 
     if (result.exitCode !== 0 && result.exitCode !== null) {
       throw new AdapterError(
