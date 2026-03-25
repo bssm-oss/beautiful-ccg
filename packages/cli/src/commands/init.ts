@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
+import { homedir } from "node:os";
 import { execFileSync } from "child_process";
 import { stringify } from "yaml";
 import type { BccgConfig, AdapterConfig } from "@bccg/adapter-base";
@@ -18,9 +19,9 @@ interface CliInfo {
 }
 
 const CLI_DEFS: Omit<CliInfo, "installed" | "version">[] = [
-  { name: "copilot", binary: "copilot", headless: ["-p", "-s", "--output-format", "json", "--allow-all-tools"], costTier: "medium", capabilities: ["coding", "reasoning", "analysis"], multiModel: true, models: ["claude-opus-4.6", "gpt-5.3-codex", "gemini-3-pro", "claude-haiku-4.5"] },
+  { name: "copilot", binary: "copilot", headless: ["-p", "-s", "--output-format", "json"], costTier: "medium", capabilities: ["coding", "reasoning", "analysis"], multiModel: true, models: ["claude-opus-4.6", "gpt-5.3-codex", "gemini-3-pro", "claude-haiku-4.5"] },
   { name: "claude", binary: "claude", headless: ["-p", "--output-format", "json"], costTier: "high", capabilities: ["reasoning", "coding", "analysis"] },
-  { name: "codex", binary: "codex", headless: ["exec", "--json", "--full-auto"], costTier: "medium", capabilities: ["coding", "testing", "refactoring"] },
+  { name: "codex", binary: "codex", headless: ["exec", "--json"], costTier: "medium", capabilities: ["coding", "testing", "refactoring"] },
   { name: "gemini", binary: "gemini", headless: ["-p", "--output-format", "json"], costTier: "free", capabilities: ["summarize", "generate", "quick-analysis"] },
 ];
 
@@ -37,9 +38,9 @@ export function detectCli(def: Omit<CliInfo, "installed" | "version">): CliInfo 
 
 // MCP config paths for each CLI
 const MCP_PATHS: Record<string, string> = {
-  claude: join(process.env.HOME ?? "~", ".claude", "mcp-servers.json"),
-  gemini: join(process.env.HOME ?? "~", ".gemini", "settings.json"),
-  copilot: join(process.env.HOME ?? "~", ".copilot", "mcp-config.json"),
+  claude: join(homedir(), ".claude", "mcp-servers.json"),
+  gemini: join(homedir(), ".gemini", "settings.json"),
+  copilot: join(homedir(), ".copilot", "mcp-config.json"),
 };
 
 function registerMcpServer(cliName: string): boolean {
