@@ -1,0 +1,114 @@
+import { execa } from "execa";
+import type {
+  ModelAdapter,
+  CostTier,
+  RunOptions,
+  AdapterResult,
+  AvailabilityStatus,
+} from "@bccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS, MAX_OUTPUT_SIZE } from "@bccg/adapter-base";
+import { parseCopilotOutput } from "./parser.js";
+import { COPILOT_MODELS, resolveModel } from "./models.js";
+
+export { parseCopilotOutput } from "./parser.js";
+export type { CopilotParsed } from "./parser.js";
+export { COPILOT_MODELS, MODEL_ALIASES, resolveModel } from "./models.js";
+export type { CopilotModel } from "./models.js";
+
+export class CopilotAdapter implements ModelAdapter {
+  readonly name = "copilot";
+  readonly costTier: CostTier = "medium";
+  readonly multiModel = true;
+
+  async run(prompt: string, options?: RunOptions): Promise<AdapterResult> {
+    const depth = Number(process.env.BCCG_DEPTH ?? "0");
+    const args: string[] = ["-p", prompt, "-s", "--output-format", "json"];
+    if (options?.allowAutonomous) { args.push("--allow-all-tools"); }
+
+    if (options?.model) {
+      args.push("--model", resolveModel(options.model));
+    }
+
+    const env = {
+      ...(options?.env ?? {}),
+      BCCG_DEPTH: String(depth + 1),
+    };
+
+    const start = Date.now();
+
+    const result = await execa("copilot", args, {
+      cwd: options?.cwd,
+      timeout: options?.timeout ?? DEFAULT_TIMEOUTS.copilot,
+      cancelSignal: options?.signal as AbortSignal | undefined,
+      env,
+      reject: false,
+    });
+
+    const latency = Date.now() - start;
+
+    if (result.timedOut) {
+      throw new AdapterError(
+        `copilot timed out after ${options?.timeout ?? DEFAULT_TIMEOUTS.copilot}ms`,
+        "copilot",
+        undefined,
+        result.stderr,
+      );
+    }
+
+    const stdout = result.stdout ?? "";
+    if (stdout.length > MAX_OUTPUT_SIZE) {
+      throw new AdapterError(`copilot output exceeded MAX_OUTPUT_SIZE (${MAX_OUTPUT_SIZE} bytes)`, "copilot");
+    }
+
+    const parsed = parseCopilotOutput(stdout);
+
+    if (parsed.exitCode !== 0 || (result.exitCode !== 0 && result.exitCode !== null)) {
+      const code = parsed.exitCode !== 0 ? parsed.exitCode : (result.exitCode ?? 1);
+      throw new AdapterError(
+        `copilot exited with code ${code}`,
+        "copilot",
+        code,
+        result.stderr,
+      );
+    }
+
+    return {
+      output: parsed.content,
+      model: parsed.model || "copilot",
+      adapter: "copilot",
+      latency,
+      exitCode: parsed.exitCode,
+      raw: result.stdout,
+    };
+  }
+
+  async checkAvailability(): Promise<AvailabilityStatus> {
+    try {
+      const result = await execa("copilot", ["--version"], { reject: false });
+      const installed = result.exitCode === 0;
+      const version = installed ? (result.stdout?.trim() ?? null) : null;
+
+      return {
+        installed,
+        authenticated: installed, // assume authenticated if installed
+        version,
+        jsonOutput: true,
+        multiModel: true,
+        supportedModels: [...COPILOT_MODELS],
+      };
+    } catch {
+      return {
+        installed: false,
+        authenticated: false,
+        version: null,
+        jsonOutput: true,
+        multiModel: true,
+        supportedModels: [...COPILOT_MODELS],
+      };
+    }
+  }
+
+  async getSupportedModels(): Promise<string[]> {
+    return [...COPILOT_MODELS];
+  }
+}

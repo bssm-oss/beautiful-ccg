@@ -1,0 +1,26 @@
+{
+  "name": "beautiful-ccg",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "bccg": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@bccg/core": "workspace:*",
+    "@bccg/mcp-server": "workspace:*",
+    "@bccg/adapter-copilot": "workspace:*",
+    "@bccg/adapter-claude": "workspace:*",
+    "@bccg/adapter-codex": "workspace:*",
+    "@bccg/adapter-gemini": "workspace:*",
+    "commander": "^13.1.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.0"
+  }
+}
