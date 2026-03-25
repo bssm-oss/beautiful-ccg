@@ -1,0 +1,89 @@
+{
+  "session_id": "ba5a3e87-0fcc-45c7-bfaf-c8cd217147b3",
+  "response": "안녕하세요! `beautiful-ccg` 프로젝트의 코드베이스 분석과 개발을 도와드리는 Gemini CLI입니다. 건네주신 `bccg-prd.md`와 `bccg-implementation-plan.md`를 바탕으로 작업을 시작하겠습니다. 무엇을 도와드릴까요?",
+  "stats": {
+    "models": {
+      "gemini-2.5-flash-lite": {
+        "api": {
+          "totalRequests": 1,
+          "totalErrors": 0,
+          "totalLatencyMs": 2679
+        },
+        "tokens": {
+          "input": 1495,
+          "prompt": 1495,
+          "candidates": 50,
+          "total": 1794,
+          "cached": 0,
+          "thoughts": 249,
+          "tool": 0
+        },
+        "roles": {
+          "utility_router": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 2679,
+            "tokens": {
+              "input": 1495,
+              "prompt": 1495,
+              "candidates": 50,
+              "total": 1794,
+              "cached": 0,
+              "thoughts": 249,
+              "tool": 0
+            }
+          }
+        }
+      },
+      "gemini-3-flash-preview": {
+        "api": {
+          "totalRequests": 1,
+          "totalErrors": 0,
+          "totalLatencyMs": 2300
+        },
+        "tokens": {
+          "input": 7224,
+          "prompt": 7224,
+          "candidates": 58,
+          "total": 7282,
+          "cached": 0,
+          "thoughts": 0,
+          "tool": 0
+        },
+        "roles": {
+          "main": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 2300,
+            "tokens": {
+              "input": 7224,
+              "prompt": 7224,
+              "candidates": 58,
+              "total": 7282,
+              "cached": 0,
+              "thoughts": 0,
+              "tool": 0
+            }
+          }
+        }
+      }
+    },
+    "tools": {
+      "totalCalls": 0,
+      "totalSuccess": 0,
+      "totalFail": 0,
+      "totalDurationMs": 0,
+      "totalDecisions": {
+        "accept": 0,
+        "reject": 0,
+        "modify": 0,
+        "auto_accept": 0
+      },
+      "byName": {}
+    },
+    "files": {
+      "totalLinesAdded": 0,
+      "totalLinesRemoved": 0
+    }
+  }
+}
