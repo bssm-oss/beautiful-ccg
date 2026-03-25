@@ -45,12 +45,26 @@ describe("CodexAdapter", () => {
   });
 
   describe("run()", () => {
-    it("builds correct args [exec, prompt, --json, --full-auto]", async () => {
+    it("builds correct args [exec, prompt, --json] without --full-auto by default", async () => {
       mockedExeca.mockResolvedValueOnce(
         makeExecaResult({ stdout: makeNdjsonOutput("response") }) as never,
       );
 
       await adapter.run("hello world");
+
+      expect(mockedExeca).toHaveBeenCalledWith(
+        "codex",
+        ["exec", "hello world", "--json"],
+        expect.objectContaining({ reject: false }),
+      );
+    });
+
+    it("adds --full-auto only when allowAutonomous is true", async () => {
+      mockedExeca.mockResolvedValueOnce(
+        makeExecaResult({ stdout: makeNdjsonOutput("response") }) as never,
+      );
+
+      await adapter.run("hello world", { allowAutonomous: true });
 
       expect(mockedExeca).toHaveBeenCalledWith(
         "codex",

@@ -18,6 +18,8 @@ export interface RunOptions {
   cwd?: string;
   signal?: AbortSignal;
   env?: Record<string, string>;
+  /** When true, grant the spawned CLI unrestricted autonomous execution (e.g. --full-auto, --allow-all-tools). Defaults to false. */
+  allowAutonomous?: boolean;
 }
 
 export interface AdapterResult {
