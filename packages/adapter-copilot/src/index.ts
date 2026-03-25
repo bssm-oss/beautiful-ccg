@@ -6,7 +6,7 @@ import type {
   AdapterResult,
   AvailabilityStatus,
 } from "@bccg/adapter-base";
-import { AdapterError, DEFAULT_TIMEOUTS } from "@bccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS, MAX_OUTPUT_SIZE } from "@bccg/adapter-base";
 import { parseCopilotOutput } from "./parser.js";
 import { COPILOT_MODELS, resolveModel } from "./models.js";
 
@@ -28,8 +28,7 @@ export class CopilotAdapter implements ModelAdapter {
       args.push("--model", resolveModel(options.model));
     }
 
-    const env: Record<string, string> = {
-      ...process.env as Record<string, string>,
+    const env = {
       ...(options?.env ?? {}),
       BCCG_DEPTH: String(depth + 1),
     };
@@ -55,7 +54,15 @@ export class CopilotAdapter implements ModelAdapter {
       );
     }
 
-    const parsed = parseCopilotOutput(result.stdout ?? "");
+    const stdout = result.stdout ?? "";
+    if (stdout.length > MAX_OUTPUT_SIZE) {
+      throw new AdapterError(
+        `copilot output exceeded MAX_OUTPUT_SIZE (${MAX_OUTPUT_SIZE} bytes)`,
+        "copilot",
+      );
+    }
+
+    const parsed = parseCopilotOutput(stdout);
 
     if (parsed.exitCode !== 0 || (result.exitCode !== 0 && result.exitCode !== null)) {
       const code = parsed.exitCode !== 0 ? parsed.exitCode : (result.exitCode ?? 1);

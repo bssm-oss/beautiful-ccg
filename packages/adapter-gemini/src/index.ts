@@ -6,7 +6,7 @@ import type {
   AdapterResult,
   AvailabilityStatus,
 } from "@bccg/adapter-base";
-import { AdapterError, DEFAULT_TIMEOUTS } from "@bccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS, MAX_OUTPUT_SIZE } from "@bccg/adapter-base";
 import { parseGeminiOutput } from "./parser.js";
 
 export { parseGeminiOutput } from "./parser.js";
@@ -21,8 +21,7 @@ export class GeminiAdapter implements ModelAdapter {
     const depth = Number(process.env.BCCG_DEPTH ?? "0");
     const args: string[] = ["-p", prompt, "--output-format", "json"];
 
-    const env: Record<string, string> = {
-      ...(process.env as Record<string, string>),
+    const env = {
       ...(options?.env ?? {}),
       BCCG_DEPTH: String(depth + 1),
     };
@@ -57,7 +56,15 @@ export class GeminiAdapter implements ModelAdapter {
       );
     }
 
-    const parsed = parseGeminiOutput(result.stdout ?? "");
+    const stdout = result.stdout ?? "";
+    if (stdout.length > MAX_OUTPUT_SIZE) {
+      throw new AdapterError(
+        `gemini output exceeded MAX_OUTPUT_SIZE (${MAX_OUTPUT_SIZE} bytes)`,
+        "gemini",
+      );
+    }
+
+    const parsed = parseGeminiOutput(stdout);
 
     return {
       output: parsed.content,

@@ -6,7 +6,7 @@ import type {
   AdapterResult,
   AvailabilityStatus,
 } from "@bccg/adapter-base";
-import { AdapterError, DEFAULT_TIMEOUTS } from "@bccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS, MAX_OUTPUT_SIZE } from "@bccg/adapter-base";
 import { parseClaudeOutput } from "./parser.js";
 
 export { parseClaudeOutput } from "./parser.js";
@@ -21,8 +21,7 @@ export class ClaudeAdapter implements ModelAdapter {
     const depth = Number(process.env.BCCG_DEPTH ?? "0");
     const args: string[] = ["-p", prompt, "--output-format", "json"];
 
-    const env: Record<string, string> = {
-      ...(process.env as Record<string, string>),
+    const env = {
       ...(options?.env ?? {}),
       BCCG_DEPTH: String(depth + 1),
     };
@@ -48,7 +47,15 @@ export class ClaudeAdapter implements ModelAdapter {
       );
     }
 
-    const parsed = parseClaudeOutput(result.stdout ?? "");
+    const stdout = result.stdout ?? "";
+    if (stdout.length > MAX_OUTPUT_SIZE) {
+      throw new AdapterError(
+        `claude output exceeded MAX_OUTPUT_SIZE (${MAX_OUTPUT_SIZE} bytes)`,
+        "claude",
+      );
+    }
+
+    const parsed = parseClaudeOutput(stdout);
 
     if (parsed.exitCode !== 0 || (result.exitCode !== 0 && result.exitCode !== null)) {
       const code = parsed.exitCode !== 0 ? parsed.exitCode : (result.exitCode ?? 1);
