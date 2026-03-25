@@ -1,0 +1,25 @@
+{
+  "name": "beautiful-ccg",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Run Claude, ChatGPT, and Gemini together — with whatever CLI you already have.",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "clean": "pnpm -r exec rm -rf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0",
+    "tsup": "^8.4.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
