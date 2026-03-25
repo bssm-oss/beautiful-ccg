@@ -82,16 +82,11 @@ export async function runPipeline(
         latency,
       });
 
-      // Return partial results on error
-      return {
-        steps: results,
-        finalOutput:
-          results
-            .filter(r => r.status === "success")
-            .map(r => r.output)
-            .pop() ?? "",
-        totalLatency: Date.now() - startTime,
-      };
+      throw new PipelineError(
+        `Step ${i} (${step.adapter ?? "unknown"}) failed: ${err instanceof Error ? err.message : String(err)}`,
+        i,
+        results,
+      );
     }
   }
 

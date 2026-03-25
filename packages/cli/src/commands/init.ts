@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync, copyFileSync } from "fs";
 import { join } from "path";
 import { execFileSync } from "child_process";
 import { stringify } from "yaml";
@@ -49,6 +49,7 @@ function registerMcpServer(cliName: string): boolean {
   try {
     let config: Record<string, unknown> = {};
     if (existsSync(configPath)) {
+      copyFileSync(configPath, `${configPath}.bak`);
       config = JSON.parse(readFileSync(configPath, "utf-8")) as Record<string, unknown>;
     }
 

@@ -74,7 +74,7 @@ describe("runPipeline()", () => {
     expect(claudeCall).toContain("codex-output");
   });
 
-  it("returns partial results when middle step fails", async () => {
+  it("throws PipelineError with partial results when middle step fails", async () => {
     const registry = new Registry();
     const gemini = createMockAdapter("gemini", "free");
     const codex = createMockAdapter("codex", "medium");
@@ -94,16 +94,19 @@ describe("runPipeline()", () => {
       { adapter: "claude", action: "judge" },
     ];
 
-    const result = await runPipeline(steps, "base prompt", registry);
-
-    expect(result.steps).toHaveLength(2);
-    expect(result.steps[0].status).toBe("success");
-    expect(result.steps[1].status).toBe("error");
-    expect(result.steps[1].error).toBe("codex failed");
-    // finalOutput is last successful step's output
-    expect(result.finalOutput).toBe("gemini-output");
-    // claude was never called
-    expect((claude.run as ReturnType<typeof vi.fn>).mock.calls).toHaveLength(0);
+    await expect(runPipeline(steps, "base prompt", registry)).rejects.toThrow(PipelineError);
+    // Reset mocks for second assertion
+    (gemini.run as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      makeResult("gemini", "gemini-output"),
+    );
+    (codex.run as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error("codex failed"));
+    await expect(runPipeline(steps, "base prompt", registry)).rejects.toMatchObject({
+      step: 1,
+      partialResults: expect.arrayContaining([
+        expect.objectContaining({ status: "success", adapter: "gemini" }),
+        expect.objectContaining({ status: "error", error: "codex failed" }),
+      ]),
+    });
   });
 
   it("last step receives synthesis instruction when multi-step", async () => {
