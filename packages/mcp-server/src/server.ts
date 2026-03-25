@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { MAX_PROMPT_SIZE } from "@bccg/adapter-base";
 import type { Orchestrator } from "@bccg/core";
 
 export function createServer(orchestrator: Orchestrator): McpServer {
@@ -11,13 +12,13 @@ export function createServer(orchestrator: Orchestrator): McpServer {
     "bccg_run",
     "Run a prompt through multiple AI CLIs with auto-routing",
     {
-      prompt: z.string().describe("The prompt to run"),
+      prompt: z.string().max(MAX_PROMPT_SIZE).describe("The prompt to run"),
       strategy: z
         .enum(["cheap-first", "quality-first", "balanced", "parallel"])
         .optional()
         .describe("Routing strategy"),
-      adapter: z.string().optional().describe("Specific adapter to use"),
-      model: z.string().optional().describe("Model for intra-CLI routing"),
+      adapter: z.string().regex(/^[a-z0-9-]+$/).max(64).optional().describe("Specific adapter to use"),
+      model: z.string().regex(/^[a-z0-9._-]+$/).max(64).optional().describe("Model for intra-CLI routing"),
     },
     async ({ prompt, strategy, adapter, model }) => {
       if (depth >= 1) {

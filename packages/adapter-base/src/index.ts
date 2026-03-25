@@ -18,6 +18,8 @@ export interface RunOptions {
   cwd?: string;
   signal?: AbortSignal;
   env?: Record<string, string>;
+  /** When true, grant the spawned CLI unrestricted autonomous execution (e.g. --full-auto, --allow-all-tools). Defaults to false. */
+  allowAutonomous?: boolean;
 }
 
 export interface AdapterResult {
@@ -146,6 +148,7 @@ export const BCCG_DEPTH_ENV = "BCCG_DEPTH";
 export const BCCG_HOST_CLI_ENV = "BCCG_HOST_CLI";
 export const MAX_PIPELINE_STEPS = 10;
 export const MAX_OUTPUT_SIZE = 100 * 1024; // 100KB per adapter
+export const MAX_PROMPT_SIZE = 100 * 1024; // 100KB max prompt size
 
 export const DEFAULT_TIMEOUTS: Record<string, number> = {
   claude: 180_000,
