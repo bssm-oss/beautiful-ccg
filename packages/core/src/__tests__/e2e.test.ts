@@ -5,8 +5,8 @@ import type {
   RunOptions,
   AdapterResult,
   AvailabilityStatus,
-} from "@bccg/adapter-base";
-import { PipelineError } from "@bccg/adapter-base";
+} from "@beautiful-ccg/adapter-base";
+import { PipelineError } from "@beautiful-ccg/adapter-base";
 import { Registry } from "../registry.js";
 import { Orchestrator } from "../orchestrator.js";
 

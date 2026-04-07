@@ -5,8 +5,8 @@ import type {
   RunOptions,
   AdapterResult,
   AvailabilityStatus,
-} from "@bccg/adapter-base";
-import { AdapterError, DEFAULT_TIMEOUTS } from "@bccg/adapter-base";
+} from "@beautiful-ccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS } from "@beautiful-ccg/adapter-base";
 import { parseGeminiOutput } from "./parser.js";
 
 export { parseGeminiOutput } from "./parser.js";

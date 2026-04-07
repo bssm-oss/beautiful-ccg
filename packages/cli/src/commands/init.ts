@@ -3,7 +3,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
 import { execFileSync } from "child_process";
 import { stringify } from "yaml";
-import type { BccgConfig, AdapterConfig } from "@bccg/adapter-base";
+import type { BccgConfig, AdapterConfig } from "@beautiful-ccg/adapter-base";
 
 interface CliInfo {
   name: string;

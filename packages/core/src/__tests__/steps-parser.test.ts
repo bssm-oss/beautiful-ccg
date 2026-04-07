@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { MAX_PIPELINE_STEPS } from "@bccg/adapter-base";
+import { MAX_PIPELINE_STEPS } from "@beautiful-ccg/adapter-base";
 import { parseSteps } from "../steps-parser.js";
 
 describe("parseSteps()", () => {

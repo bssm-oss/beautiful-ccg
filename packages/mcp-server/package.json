@@ -1,5 +1,5 @@
 {
-  "name": "@bccg/mcp-server",
+  "name": "@beautiful-ccg/mcp-server",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -12,12 +12,15 @@
       "require": "./dist/index.cjs"
     }
   },
+  "files": ["dist"],
+  "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsup",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@bccg/core": "workspace:*",
+    "@beautiful-ccg/core": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.12.0",
     "zod": "^3.25.0"
   },

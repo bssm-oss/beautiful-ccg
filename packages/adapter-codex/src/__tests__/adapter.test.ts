@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CodexAdapter } from "../index.js";
-import { AdapterError } from "@bccg/adapter-base";
+import { AdapterError } from "@beautiful-ccg/adapter-base";
 
 // Mock execa module
 vi.mock("execa", () => ({

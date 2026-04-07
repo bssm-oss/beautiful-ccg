@@ -1,4 +1,4 @@
-import type { ModelAdapter, Strategy, RoutingPlan, RoutingStep, BccgConfig, CostTier } from "@bccg/adapter-base";
+import type { ModelAdapter, Strategy, RoutingPlan, RoutingStep, BccgConfig, CostTier } from "@beautiful-ccg/adapter-base";
 import { classifyTask } from "./classifier.js";
 
 const TIER_ORDER: CostTier[] = ["free", "low", "medium", "high"];

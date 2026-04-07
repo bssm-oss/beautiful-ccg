@@ -5,8 +5,8 @@ import type {
   RunOptions,
   AdapterResult,
   AvailabilityStatus,
-} from "@bccg/adapter-base";
-import { AdapterError, DEFAULT_TIMEOUTS } from "@bccg/adapter-base";
+} from "@beautiful-ccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS } from "@beautiful-ccg/adapter-base";
 import { parseCopilotOutput } from "./parser.js";
 import { COPILOT_MODELS, resolveModel } from "./models.js";
 

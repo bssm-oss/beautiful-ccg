@@ -5,8 +5,8 @@ import type {
   RunOptions,
   AdapterResult,
   AvailabilityStatus,
-} from "@bccg/adapter-base";
-import { AdapterError, DEFAULT_TIMEOUTS } from "@bccg/adapter-base";
+} from "@beautiful-ccg/adapter-base";
+import { AdapterError, DEFAULT_TIMEOUTS } from "@beautiful-ccg/adapter-base";
 import { parseCodexOutput } from "./parser.js";
 
 export { parseCodexOutput } from "./parser.js";

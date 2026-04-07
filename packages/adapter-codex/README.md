@@ -1,11 +1,11 @@
-# @bccg/adapter-codex
+# @beautiful-ccg/adapter-codex
 
 bccg adapter for [OpenAI Codex CLI](https://github.com/openai/codex).
 
 ## Usage
 
 ```typescript
-import { CodexAdapter } from "@bccg/adapter-codex";
+import { CodexAdapter } from "@beautiful-ccg/adapter-codex";
 
 const adapter = new CodexAdapter();
 const result = await adapter.run("implement a retry function");

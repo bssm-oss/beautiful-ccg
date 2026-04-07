@@ -1,11 +1,11 @@
-# @bccg/adapter-base
+# @beautiful-ccg/adapter-base
 
 Shared types, interfaces, error classes, and constants for bccg adapters. Zero runtime dependencies.
 
 ## Install
 
 ```bash
-pnpm add @bccg/adapter-base
+pnpm add @beautiful-ccg/adapter-base
 ```
 
 ## Interfaces

@@ -1,5 +1,5 @@
-import type { ModelAdapter, AdapterRegistry as IAdapterRegistry } from "@bccg/adapter-base";
-import { BCCG_HOST_CLI_ENV } from "@bccg/adapter-base";
+import type { ModelAdapter, AdapterRegistry as IAdapterRegistry } from "@beautiful-ccg/adapter-base";
+import { BCCG_HOST_CLI_ENV } from "@beautiful-ccg/adapter-base";
 
 export class Registry implements IAdapterRegistry {
   private adapters = new Map<string, ModelAdapter>();

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import type { ModelAdapter, CostTier } from "@bccg/adapter-base";
+import type { ModelAdapter, CostTier } from "@beautiful-ccg/adapter-base";
 import { route } from "../router.js";
 
 function createMockAdapter(name: string, costTier: CostTier, multiModel = false): ModelAdapter {

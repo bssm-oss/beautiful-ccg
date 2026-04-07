@@ -1,5 +1,5 @@
 {
-  "name": "@bccg/adapter-base",
+  "name": "@beautiful-ccg/adapter-base",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -12,9 +12,12 @@
       "require": "./dist/index.cjs"
     }
   },
+  "files": ["dist"],
+  "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsup",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "tsup": "^8.4.0",

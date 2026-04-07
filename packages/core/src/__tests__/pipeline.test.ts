@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import type { ModelAdapter, AdapterResult, AvailabilityStatus, CostTier } from "@bccg/adapter-base";
-import { PipelineError } from "@bccg/adapter-base";
+import type { ModelAdapter, AdapterResult, AvailabilityStatus, CostTier } from "@beautiful-ccg/adapter-base";
+import { PipelineError } from "@beautiful-ccg/adapter-base";
 import { Registry } from "../registry.js";
 import { runPipeline } from "../pipeline.js";
 import type { ParsedStep } from "../steps-parser.js";

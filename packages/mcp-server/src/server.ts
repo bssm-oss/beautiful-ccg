@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import type { Orchestrator } from "@bccg/core";
+import type { Orchestrator } from "@beautiful-ccg/core";
 
 export function createServer(orchestrator: Orchestrator): McpServer {
   const depth = Number(process.env.BCCG_DEPTH ?? "0");

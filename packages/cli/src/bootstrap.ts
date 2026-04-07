@@ -1,8 +1,8 @@
-import { Registry, Orchestrator } from "@bccg/core";
-import { CopilotAdapter } from "@bccg/adapter-copilot";
-import { ClaudeAdapter } from "@bccg/adapter-claude";
-import { CodexAdapter } from "@bccg/adapter-codex";
-import { GeminiAdapter } from "@bccg/adapter-gemini";
+import { Registry, Orchestrator } from "@beautiful-ccg/core";
+import { CopilotAdapter } from "@beautiful-ccg/adapter-copilot";
+import { ClaudeAdapter } from "@beautiful-ccg/adapter-claude";
+import { CodexAdapter } from "@beautiful-ccg/adapter-codex";
+import { GeminiAdapter } from "@beautiful-ccg/adapter-gemini";
 
 export function createOrchestrator(): Orchestrator {
   const registry = new Registry();

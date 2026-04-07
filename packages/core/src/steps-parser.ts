@@ -1,4 +1,4 @@
-import { MAX_PIPELINE_STEPS } from "@bccg/adapter-base";
+import { MAX_PIPELINE_STEPS } from "@beautiful-ccg/adapter-base";
 
 export interface ParsedStep {
   adapter?: string; // undefined = auto-route

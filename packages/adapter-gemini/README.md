@@ -1,11 +1,11 @@
-# @bccg/adapter-gemini
+# @beautiful-ccg/adapter-gemini
 
 bccg adapter for [Google Gemini CLI](https://github.com/google-gemini/gemini-cli).
 
 ## Usage
 
 ```typescript
-import { GeminiAdapter } from "@bccg/adapter-gemini";
+import { GeminiAdapter } from "@beautiful-ccg/adapter-gemini";
 
 const adapter = new GeminiAdapter();
 const result = await adapter.run("summarize this document");

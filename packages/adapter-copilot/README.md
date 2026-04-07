@@ -1,11 +1,11 @@
-# @bccg/adapter-copilot
+# @beautiful-ccg/adapter-copilot
 
 bccg adapter for [GitHub Copilot CLI](https://docs.github.com/en/copilot/github-copilot-in-the-cli). This is the project's core adapter — the only CLI with `--model` flag for intra-CLI model routing.
 
 ## Usage
 
 ```typescript
-import { CopilotAdapter } from "@bccg/adapter-copilot";
+import { CopilotAdapter } from "@beautiful-ccg/adapter-copilot";
 
 const adapter = new CopilotAdapter();
 
@@ -48,7 +48,7 @@ The Copilot CLI supports multiple backend models via `--model`. Short aliases ar
 | `haiku` | `claude-haiku-4.5` |
 
 ```typescript
-import { resolveModel, COPILOT_MODELS, MODEL_ALIASES } from "@bccg/adapter-copilot";
+import { resolveModel, COPILOT_MODELS, MODEL_ALIASES } from "@beautiful-ccg/adapter-copilot";
 
 resolveModel("opus");   // "claude-opus-4.6"
 resolveModel("sonnet"); // "claude-sonnet-4.5"

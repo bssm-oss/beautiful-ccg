@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 import { createOrchestrator } from "../bootstrap.js";
-import { startServer } from "@bccg/mcp-server";
+import { startServer } from "@beautiful-ccg/mcp-server";
 
 export function registerServeCommand(program: Command): void {
   program

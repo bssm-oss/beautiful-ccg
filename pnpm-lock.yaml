@@ -29,7 +29,7 @@ importers:
 
   packages/adapter-claude:
     dependencies:
-      '@bccg/adapter-base':
+      '@beautiful-ccg/adapter-base':
         specifier: workspace:*
         version: link:../adapter-base
       execa:
@@ -48,7 +48,7 @@ importers:
 
   packages/adapter-codex:
     dependencies:
-      '@bccg/adapter-base':
+      '@beautiful-ccg/adapter-base':
         specifier: workspace:*
         version: link:../adapter-base
       execa:
@@ -67,7 +67,7 @@ importers:
 
   packages/adapter-copilot:
     dependencies:
-      '@bccg/adapter-base':
+      '@beautiful-ccg/adapter-base':
         specifier: workspace:*
         version: link:../adapter-base
       execa:
@@ -86,7 +86,7 @@ importers:
 
   packages/adapter-gemini:
     dependencies:
-      '@bccg/adapter-base':
+      '@beautiful-ccg/adapter-base':
         specifier: workspace:*
         version: link:../adapter-base
       execa:
@@ -105,22 +105,22 @@ importers:
 
   packages/cli:
     dependencies:
-      '@bccg/adapter-claude':
+      '@beautiful-ccg/adapter-claude':
         specifier: workspace:*
         version: link:../adapter-claude
-      '@bccg/adapter-codex':
+      '@beautiful-ccg/adapter-codex':
         specifier: workspace:*
         version: link:../adapter-codex
-      '@bccg/adapter-copilot':
+      '@beautiful-ccg/adapter-copilot':
         specifier: workspace:*
         version: link:../adapter-copilot
-      '@bccg/adapter-gemini':
+      '@beautiful-ccg/adapter-gemini':
         specifier: workspace:*
         version: link:../adapter-gemini
-      '@bccg/core':
+      '@beautiful-ccg/core':
         specifier: workspace:*
         version: link:../core
-      '@bccg/mcp-server':
+      '@beautiful-ccg/mcp-server':
         specifier: workspace:*
         version: link:../mcp-server
       commander:
@@ -139,7 +139,7 @@ importers:
 
   packages/core:
     dependencies:
-      '@bccg/adapter-base':
+      '@beautiful-ccg/adapter-base':
         specifier: workspace:*
         version: link:../adapter-base
     devDependencies:
@@ -155,7 +155,7 @@ importers:
 
   packages/mcp-server:
     dependencies:
-      '@bccg/core':
+      '@beautiful-ccg/core':
         specifier: workspace:*
         version: link:../core
       '@modelcontextprotocol/sdk':

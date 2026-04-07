@@ -1,11 +1,11 @@
-# @bccg/adapter-claude
+# @beautiful-ccg/adapter-claude
 
 bccg adapter for [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code).
 
 ## Usage
 
 ```typescript
-import { ClaudeAdapter } from "@bccg/adapter-claude";
+import { ClaudeAdapter } from "@beautiful-ccg/adapter-claude";
 
 const adapter = new ClaudeAdapter();
 

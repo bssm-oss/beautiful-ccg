@@ -1,5 +1,5 @@
 {
-  "name": "@bccg/adapter-gemini",
+  "name": "@beautiful-ccg/adapter-gemini",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -12,12 +12,15 @@
       "require": "./dist/index.cjs"
     }
   },
+  "files": ["dist"],
+  "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsup",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@bccg/adapter-base": "workspace:*",
+    "@beautiful-ccg/adapter-base": "workspace:*",
     "execa": "^9.5.0"
   },
   "devDependencies": {

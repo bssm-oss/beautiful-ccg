@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { createServer } from "../server.js";
-import type { Orchestrator } from "@bccg/core";
-import type { AdapterResult, PipelineResult, AvailabilityStatus } from "@bccg/adapter-base";
+import type { Orchestrator } from "@beautiful-ccg/core";
+import type { AdapterResult, PipelineResult, AvailabilityStatus } from "@beautiful-ccg/adapter-base";
 
 function makeOrchestrator(): Orchestrator {
   return {

@@ -1,5 +1,5 @@
-import type { AdapterResult, PipelineResult, StepResult, RunOptions } from "@bccg/adapter-base";
-import { PipelineError } from "@bccg/adapter-base";
+import type { AdapterResult, PipelineResult, StepResult, RunOptions } from "@beautiful-ccg/adapter-base";
+import { PipelineError } from "@beautiful-ccg/adapter-base";
 import type { ParsedStep } from "./steps-parser.js";
 import type { Registry } from "./registry.js";
 

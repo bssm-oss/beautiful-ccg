@@ -1,5 +1,5 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import type { Orchestrator } from "@bccg/core";
+import type { Orchestrator } from "@beautiful-ccg/core";
 import { createServer } from "./server.js";
 
 export { createServer } from "./server.js";

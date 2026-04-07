@@ -1,5 +1,5 @@
 {
-  "name": "@bccg/core",
+  "name": "@beautiful-ccg/core",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -12,12 +12,15 @@
       "require": "./dist/index.cjs"
     }
   },
+  "files": ["dist"],
+  "publishConfig": { "access": "public" },
   "scripts": {
     "build": "tsup",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@bccg/adapter-base": "workspace:*"
+    "@beautiful-ccg/adapter-base": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.19.15",

@@ -4,7 +4,7 @@ import type {
   Strategy,
   AvailabilityStatus,
   BccgConfig,
-} from "@bccg/adapter-base";
+} from "@beautiful-ccg/adapter-base";
 import { Registry } from "./registry.js";
 import { route } from "./router.js";
 import { parseSteps } from "./steps-parser.js";

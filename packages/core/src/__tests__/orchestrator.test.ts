@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import type { ModelAdapter, AdapterResult, AvailabilityStatus, CostTier } from "@bccg/adapter-base";
+import type { ModelAdapter, AdapterResult, AvailabilityStatus, CostTier } from "@beautiful-ccg/adapter-base";
 import { Registry } from "../registry.js";
 import { Orchestrator } from "../orchestrator.js";
 

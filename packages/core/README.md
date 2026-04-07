@@ -1,11 +1,11 @@
-# @bccg/core
+# @beautiful-ccg/core
 
 Registry, router, classifier, pipeline engine, and orchestrator for bccg. This package ties adapters together without depending on any specific adapter implementation.
 
 ## Usage
 
 ```typescript
-import { Registry, Orchestrator, classifyTask, route, parseSteps, runPipeline } from "@bccg/core";
+import { Registry, Orchestrator, classifyTask, route, parseSteps, runPipeline } from "@beautiful-ccg/core";
 
 // Create a registry and register adapters
 const registry = new Registry();
@@ -59,7 +59,7 @@ await registry.getAvailable();             // Only installed + authenticated ada
 Route a prompt to the best adapter based on strategy.
 
 ```typescript
-import { route } from "@bccg/core";
+import { route } from "@beautiful-ccg/core";
 
 const available = await registry.getAvailable();
 const plan = route("review this code", "balanced", available);
@@ -78,7 +78,7 @@ const plan = route("review this code", "balanced", available);
 Simple keyword-based task classification.
 
 ```typescript
-import { classifyTask } from "@bccg/core";
+import { classifyTask } from "@beautiful-ccg/core";
 
 classifyTask("review this code for bugs");
 // { type: "reasoning", complexity: "low" }
@@ -95,7 +95,7 @@ Complexity: `low` (<20 words), `medium` (<100), `high` (100+)
 Execute multi-step CLI chains.
 
 ```typescript
-import { parseSteps, runPipeline } from "@bccg/core";
+import { parseSteps, runPipeline } from "@beautiful-ccg/core";
 
 const steps = parseSteps("gemini:summarize -> codex:implement -> claude:review");
 const result = await runPipeline(steps, "add error handling", registry);

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import type { ModelAdapter, AvailabilityStatus, CostTier } from "@bccg/adapter-base";
-import { BCCG_HOST_CLI_ENV } from "@bccg/adapter-base";
+import type { ModelAdapter, AvailabilityStatus, CostTier } from "@beautiful-ccg/adapter-base";
+import { BCCG_HOST_CLI_ENV } from "@beautiful-ccg/adapter-base";
 import { Registry } from "../registry.js";
 
 function createMockAdapter(

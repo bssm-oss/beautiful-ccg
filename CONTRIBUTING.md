@@ -27,8 +27,8 @@ pnpm clean            # Remove all dist/ directories
 To build or test a single package:
 
 ```bash
-pnpm --filter @bccg/core build
-pnpm --filter @bccg/core test
+pnpm --filter @beautiful-ccg/core build
+pnpm --filter @beautiful-ccg/core test
 ```
 
 ## Project Structure
@@ -58,10 +58,10 @@ fixtures/           # Real CLI output samples for parser tests
 ## Adding a New Adapter
 
 1. Create `packages/adapter-<name>/` with the same structure as existing adapters
-2. Implement the `ModelAdapter` interface from `@bccg/adapter-base`:
+2. Implement the `ModelAdapter` interface from `@beautiful-ccg/adapter-base`:
 
 ```typescript
-import type { ModelAdapter, RunOptions, AdapterResult, AvailabilityStatus } from "@bccg/adapter-base";
+import type { ModelAdapter, RunOptions, AdapterResult, AvailabilityStatus } from "@beautiful-ccg/adapter-base";
 
 export class MyAdapter implements ModelAdapter {
   readonly name = "myadapter";

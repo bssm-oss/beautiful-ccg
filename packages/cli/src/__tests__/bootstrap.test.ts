@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { createOrchestrator } from "../bootstrap.js";
-import { Orchestrator } from "@bccg/core";
+import { Orchestrator } from "@beautiful-ccg/core";
 
 describe("createOrchestrator()", () => {
   it("returns an Orchestrator instance", () => {

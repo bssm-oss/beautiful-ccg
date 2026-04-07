@@ -1,12 +1,12 @@
-# @bccg/mcp-server
+# @beautiful-ccg/mcp-server
 
 MCP server that exposes bccg capabilities as tools via the [Model Context Protocol](https://modelcontextprotocol.io).
 
 ## Usage
 
 ```typescript
-import { createServer, startServer } from "@bccg/mcp-server";
-import { Orchestrator, Registry } from "@bccg/core";
+import { createServer, startServer } from "@beautiful-ccg/mcp-server";
+import { Orchestrator, Registry } from "@beautiful-ccg/core";
 
 const orchestrator = new Orchestrator(registry);
 

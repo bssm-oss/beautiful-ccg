@@ -1,4 +1,4 @@
-import type { TaskType } from "@bccg/adapter-base";
+import type { TaskType } from "@beautiful-ccg/adapter-base";
 
 const KEYWORD_MAP: Record<TaskType, string[]> = {
   reasoning: ["review", "analyze", "judge", "reason", "evaluate", "compare", "critique", "assess", "explain why"],
