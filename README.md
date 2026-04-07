@@ -25,13 +25,13 @@ bccg is an MCP server + CLI that orchestrates multiple AI CLIs (Claude Code, Git
 ## Install
 
 ```bash
-# Clone and build
-git clone https://github.com/justn-hyeok/beautiful-ccg.git
-cd beautiful-ccg
-pnpm install
-pnpm build
+# npm
+npm install -g @beautiful-ccg/cli
 
-# Link the CLI globally
+# or from source
+git clone https://github.com/bssm-oss/beautiful-ccg.git
+cd beautiful-ccg
+pnpm install && pnpm build
 cd packages/cli && pnpm link --global
 ```
 

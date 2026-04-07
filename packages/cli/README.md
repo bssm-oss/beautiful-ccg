@@ -1,11 +1,11 @@
-# beautiful-ccg CLI
+# @beautiful-ccg/cli
 
 The `bccg` command-line tool. Wraps all bccg functionality into four commands.
 
 ## Install
 
 ```bash
-cd packages/cli && pnpm link --global
+npm install -g @beautiful-ccg/cli
 ```
 
 ## Commands
