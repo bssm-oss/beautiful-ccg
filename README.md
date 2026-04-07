@@ -8,6 +8,10 @@ Run Claude, ChatGPT, and Gemini together — with whatever CLI you already have.
 
 bccg is an MCP server + CLI that orchestrates multiple AI CLIs (Claude Code, GitHub Copilot, OpenAI Codex, Google Gemini) into a unified pipeline. Route prompts to the best CLI automatically, chain them together, or use them all as one MCP tool from any host.
 
+<p align="center">
+  <img src=".github/demo.png" alt="bccg demo" width="780">
+</p>
+
 ## Features
 
 - **Auto-routing** — `cheap-first`, `quality-first`, `balanced` strategies pick the right CLI for each prompt
