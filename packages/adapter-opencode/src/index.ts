@@ -8,12 +8,11 @@ import type {
 } from "@beautiful-ccg/adapter-base";
 import { AdapterError, DEFAULT_TIMEOUTS } from "@beautiful-ccg/adapter-base";
 import { parseOpenCodeOutput } from "./parser.js";
-import { OPENCODE_MODELS, resolveModel } from "./models.js";
+import { resolveModel, fetchModels } from "./models.js";
 
 export { parseOpenCodeOutput } from "./parser.js";
 export type { OpenCodeParsed } from "./parser.js";
-export { OPENCODE_MODELS, MODEL_ALIASES, resolveModel } from "./models.js";
-export type { OpenCodeModel } from "./models.js";
+export { resolveModel, fetchModels } from "./models.js";
 
 export class OpenCodeAdapter implements ModelAdapter {
   readonly name = "opencode";
@@ -84,13 +83,15 @@ export class OpenCodeAdapter implements ModelAdapter {
       const raw = result.stdout?.trim() ?? "";
       const version = installed ? (raw.match(/\d+\.\d+\.\d+/)?.[0] ?? raw.split("\n")[0]) : null;
 
+      const models = installed ? await fetchModels() : [];
+
       return {
         installed,
         authenticated: installed,
         version,
         jsonOutput: true,
         multiModel: true,
-        supportedModels: [...OPENCODE_MODELS],
+        supportedModels: models,
       };
     } catch {
       return {
@@ -99,12 +100,11 @@ export class OpenCodeAdapter implements ModelAdapter {
         version: null,
         jsonOutput: true,
         multiModel: true,
-        supportedModels: [...OPENCODE_MODELS],
       };
     }
   }
 
   async getSupportedModels(): Promise<string[]> {
-    return [...OPENCODE_MODELS];
+    return fetchModels();
   }
 }

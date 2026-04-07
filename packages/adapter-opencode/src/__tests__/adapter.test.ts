@@ -71,16 +71,16 @@ describe("OpenCodeAdapter", () => {
       );
     });
 
-    it("resolves model aliases before passing to CLI", async () => {
+    it("passes model string through as-is", async () => {
       mockedExeca.mockResolvedValueOnce(
-        makeExecaResult({ stdout: makeNdjsonOutput("anthropic/claude-opus-4-6", "response") }) as never,
+        makeExecaResult({ stdout: makeNdjsonOutput("google/gemini-3-flash-preview", "response") }) as never,
       );
 
-      await adapter.run("hello", { model: "opus" });
+      await adapter.run("hello", { model: "google/gemini-3-flash-preview" });
 
       expect(mockedExeca).toHaveBeenCalledWith(
         "opencode",
-        ["run", "hello", "--format", "json", "-m", "anthropic/claude-opus-4-6"],
+        ["run", "hello", "--format", "json", "-m", "google/gemini-3-flash-preview"],
         expect.objectContaining({ reject: false }),
       );
     });
@@ -168,7 +168,6 @@ describe("OpenCodeAdapter", () => {
       expect(status.authenticated).toBe(true);
       expect(status.version).toBe("1.3.17");
       expect(status.multiModel).toBe(true);
-      expect(status.supportedModels).toContain("anthropic/claude-sonnet-4-5");
     });
   });
 });
