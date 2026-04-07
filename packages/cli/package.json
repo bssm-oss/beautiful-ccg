@@ -20,6 +20,7 @@
     "@beautiful-ccg/adapter-claude": "workspace:*",
     "@beautiful-ccg/adapter-codex": "workspace:*",
     "@beautiful-ccg/adapter-gemini": "workspace:*",
+    "@beautiful-ccg/adapter-opencode": "workspace:*",
     "commander": "^13.1.0",
     "yaml": "^2.7.0"
   },

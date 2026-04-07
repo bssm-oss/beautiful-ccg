@@ -1,0 +1,4 @@
+{"type":"step_start","timestamp":1712500000000,"sessionID":"sess-001","metadata":{"model":"anthropic/claude-sonnet-4-5"}}
+{"type":"text","timestamp":1712500001000,"sessionID":"sess-001","part":{"text":"Hello! "}}
+{"type":"text","timestamp":1712500002000,"sessionID":"sess-001","part":{"text":"How can I help you today?"}}
+{"type":"step_finish","timestamp":1712500003000,"sessionID":"sess-001"}

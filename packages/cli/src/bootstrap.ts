@@ -7,6 +7,7 @@ import { CopilotAdapter } from "@beautiful-ccg/adapter-copilot";
 import { ClaudeAdapter } from "@beautiful-ccg/adapter-claude";
 import { CodexAdapter } from "@beautiful-ccg/adapter-codex";
 import { GeminiAdapter } from "@beautiful-ccg/adapter-gemini";
+import { OpenCodeAdapter } from "@beautiful-ccg/adapter-opencode";
 
 export function loadConfig(cwd: string): BccgConfig | undefined {
   const configPath = join(cwd, ".ccg", "config.yaml");
@@ -23,6 +24,7 @@ const ADAPTERS = [
   { name: "claude", create: () => new ClaudeAdapter() },
   { name: "codex", create: () => new CodexAdapter() },
   { name: "gemini", create: () => new GeminiAdapter() },
+  { name: "opencode", create: () => new OpenCodeAdapter() },
 ] as const;
 
 export function createOrchestrator(cwd?: string): Orchestrator {

@@ -18,7 +18,8 @@ describe("createOrchestrator()", () => {
       expect(names).toContain("claude");
       expect(names).toContain("codex");
       expect(names).toContain("gemini");
-      expect(names).toHaveLength(4);
+      expect(names).toContain("opencode");
+      expect(names).toHaveLength(5);
     });
   });
 });

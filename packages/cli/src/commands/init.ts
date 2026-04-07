@@ -22,6 +22,7 @@ const CLI_DEFS: Omit<CliInfo, "installed" | "version">[] = [
   { name: "claude", binary: "claude", headless: ["-p", "--output-format", "json"], costTier: "high", capabilities: ["reasoning", "coding", "analysis"] },
   { name: "codex", binary: "codex", headless: ["exec", "--json", "--full-auto"], costTier: "medium", capabilities: ["coding", "testing", "refactoring"] },
   { name: "gemini", binary: "gemini", headless: ["-p", "--output-format", "json"], costTier: "free", capabilities: ["summarize", "generate", "quick-analysis"] },
+  { name: "opencode", binary: "opencode", headless: ["run", "--format", "json"], costTier: "free", capabilities: ["coding", "reasoning", "analysis", "refactoring"], multiModel: true, models: ["anthropic/claude-sonnet-4-5", "openai/gpt-5.4", "google/gemini-3.1-pro"] },
 ];
 
 export function detectCli(def: Omit<CliInfo, "installed" | "version">): CliInfo {

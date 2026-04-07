@@ -153,6 +153,7 @@ export const DEFAULT_TIMEOUTS: Record<string, number> = {
   gemini: 30_000,
   copilot: 60_000,
   cursor: 120_000,
+  opencode: 120_000,
 };
 
 // ─── JSONL Output Schemas (from Step 0 validation) ───

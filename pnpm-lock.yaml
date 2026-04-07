@@ -103,6 +103,25 @@ importers:
         specifier: ^5.8.0
         version: 5.9.3
 
+  packages/adapter-opencode:
+    dependencies:
+      '@beautiful-ccg/adapter-base':
+        specifier: workspace:*
+        version: link:../adapter-base
+      execa:
+        specifier: ^9.5.0
+        version: 9.6.1
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.15
+      tsup:
+        specifier: ^8.4.0
+        version: 8.5.1(postcss@8.5.8)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.8.0
+        version: 5.9.3
+
   packages/cli:
     dependencies:
       '@beautiful-ccg/adapter-base':
@@ -120,6 +139,9 @@ importers:
       '@beautiful-ccg/adapter-gemini':
         specifier: workspace:*
         version: link:../adapter-gemini
+      '@beautiful-ccg/adapter-opencode':
+        specifier: workspace:*
+        version: link:../adapter-opencode
       '@beautiful-ccg/core':
         specifier: workspace:*
         version: link:../core
