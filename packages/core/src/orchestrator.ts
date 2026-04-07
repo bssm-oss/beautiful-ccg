@@ -44,7 +44,45 @@ export class Orchestrator {
     const strategy = opts?.strategy ?? this.config?.defaults?.strategy ?? "balanced";
     const plan = route(prompt, strategy, available, this.config);
 
-    // Execute first step (single run mode)
+    // Parallel: run all adapters concurrently
+    if (plan.strategy === "parallel" && plan.steps.length > 1) {
+      const promises = plan.steps.map(async (s) => {
+        const a = this.registry.get(s.adapter);
+        if (!a) return null;
+        try {
+          return await a.run(prompt, {
+            model: s.model ?? opts?.model,
+            cwd: opts?.cwd,
+            timeout: opts?.timeout,
+            signal: opts?.signal,
+          });
+        } catch {
+          return null;
+        }
+      });
+
+      const settled = await Promise.allSettled(promises);
+      const results = settled
+        .map(s => s.status === "fulfilled" ? s.value : null)
+        .filter((r): r is AdapterResult => r !== null);
+
+      if (results.length === 0) throw new Error("All parallel adapters failed");
+
+      const combined = results
+        .map(r => `--- ${r.adapter} (${r.model}) ---\n${r.output}`)
+        .join("\n\n");
+
+      return {
+        output: combined,
+        model: "parallel",
+        adapter: results.map(r => r.adapter).join("+"),
+        latency: Math.max(...results.map(r => r.latency)),
+        exitCode: 0,
+        raw: JSON.stringify(results),
+      };
+    }
+
+    // Single step: execute primary with fallback
     const step = plan.steps[0];
     const adapter = this.registry.get(step.adapter);
     if (!adapter) throw new Error(`Routed adapter "${step.adapter}" not found`);

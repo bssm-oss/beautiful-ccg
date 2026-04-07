@@ -37,7 +37,7 @@ export function detectCli(def: Omit<CliInfo, "installed" | "version">): CliInfo 
 
 // MCP config paths for each CLI
 const MCP_PATHS: Record<string, string> = {
-  claude: join(process.env.HOME ?? "~", ".claude", "mcp-servers.json"),
+  claude: join(process.env.HOME ?? "~", ".claude.json"),
   gemini: join(process.env.HOME ?? "~", ".gemini", "settings.json"),
   copilot: join(process.env.HOME ?? "~", ".copilot", "mcp-config.json"),
 };
@@ -138,6 +138,15 @@ export function registerInitCommand(program: Command): void {
         }
       }
 
-      console.log("\n✅ Done! Use @bccg in any of your CLIs, or run: ccg run \"your prompt\"");
+      // Generate project-local .mcp.json
+      const mcpJsonPath = join(process.cwd(), ".mcp.json");
+      if (!existsSync(mcpJsonPath)) {
+        writeFileSync(mcpJsonPath, JSON.stringify({
+          mcpServers: { bccg: { type: "stdio", command: "bccg", args: ["serve"] } },
+        }, null, 2) + "\n");
+        console.log("\n📄 Created .mcp.json (project-local MCP config)");
+      }
+
+      console.log("\n✅ Done! Use @bccg in any of your CLIs, or run: bccg run \"your prompt\"");
     });
 }

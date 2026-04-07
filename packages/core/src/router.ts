@@ -13,21 +13,44 @@ export function route(
     throw new Error("No available adapters");
   }
 
+  // Check config routing rules first
+  if (config?.routing?.rules && strategy !== "parallel") {
+    const ruleMatch = matchRoutingRules(prompt, config, availableAdapters);
+    if (ruleMatch) return { steps: [ruleMatch], strategy };
+  }
+
   switch (strategy) {
     case "cheap-first":
-      return routeCheapFirst(availableAdapters, config);
+      return routeCheapFirst(availableAdapters);
     case "quality-first":
-      return routeQualityFirst(availableAdapters, config);
+      return routeQualityFirst(availableAdapters);
     case "balanced":
-      return routeBalanced(prompt, availableAdapters, config);
+      return routeBalanced(prompt, availableAdapters);
     case "parallel":
       return routeParallel(availableAdapters);
     default:
-      return routeBalanced(prompt, availableAdapters, config);
+      return routeBalanced(prompt, availableAdapters);
   }
 }
 
-function routeCheapFirst(adapters: ModelAdapter[], _config?: BccgConfig): RoutingPlan {
+function matchRoutingRules(
+  prompt: string,
+  config: BccgConfig,
+  adapters: ModelAdapter[],
+): RoutingStep | undefined {
+  if (!config.routing?.rules) return undefined;
+  const { type, complexity } = classifyTask(prompt);
+  for (const rule of config.routing.rules) {
+    if (rule.condition.type && rule.condition.type !== type) continue;
+    if (rule.condition.complexity && rule.condition.complexity !== complexity) continue;
+    if (adapters.some(a => a.name === rule.target)) {
+      return { adapter: rule.target, fallback: rule.fallback };
+    }
+  }
+  return undefined;
+}
+
+function routeCheapFirst(adapters: ModelAdapter[]): RoutingPlan {
   // Sort by cost tier ascending (free first)
   const sorted = [...adapters].sort((a, b) => TIER_ORDER.indexOf(a.costTier) - TIER_ORDER.indexOf(b.costTier));
   const steps: RoutingStep[] = [{ adapter: sorted[0].name }];
@@ -40,7 +63,7 @@ function routeCheapFirst(adapters: ModelAdapter[], _config?: BccgConfig): Routin
   return { steps, strategy: "cheap-first" };
 }
 
-function routeQualityFirst(adapters: ModelAdapter[], _config?: BccgConfig): RoutingPlan {
+function routeQualityFirst(adapters: ModelAdapter[]): RoutingPlan {
   // Sort by cost tier descending (high first)
   const sorted = [...adapters].sort((a, b) => TIER_ORDER.indexOf(b.costTier) - TIER_ORDER.indexOf(a.costTier));
   const steps: RoutingStep[] = [{ adapter: sorted[0].name }];
@@ -52,7 +75,7 @@ function routeQualityFirst(adapters: ModelAdapter[], _config?: BccgConfig): Rout
   return { steps, strategy: "quality-first" };
 }
 
-function routeBalanced(prompt: string, adapters: ModelAdapter[], _config?: BccgConfig): RoutingPlan {
+function routeBalanced(prompt: string, adapters: ModelAdapter[]): RoutingPlan {
   const { type } = classifyTask(prompt);
 
   // Map task type to preferred adapter characteristics

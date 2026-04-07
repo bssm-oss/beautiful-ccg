@@ -3,6 +3,8 @@ import { registerRunCommand } from "./commands/run.js";
 import { registerStatusCommand } from "./commands/status.js";
 import { registerServeCommand } from "./commands/serve.js";
 import { registerInitCommand } from "./commands/init.js";
+import { registerPipelineCommand } from "./commands/pipeline.js";
+import { registerDoctorCommand } from "./commands/doctor.js";
 
 const program = new Command();
 
@@ -12,8 +14,10 @@ program
   .version("0.1.0");
 
 registerRunCommand(program);
+registerPipelineCommand(program);
 registerStatusCommand(program);
-registerServeCommand(program);
 registerInitCommand(program);
+registerServeCommand(program);
+registerDoctorCommand(program);
 
 program.parse();
