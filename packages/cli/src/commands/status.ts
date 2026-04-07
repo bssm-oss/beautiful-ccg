@@ -1,12 +1,5 @@
 import type { Command } from "commander";
 import { createOrchestrator } from "../bootstrap.js";
-import { COPILOT_MODEL_INFO } from "@beautiful-ccg/adapter-copilot";
-
-function formatMultiplier(m: number): string {
-  if (m === 0) return "free";
-  if (m < 1) return `${m}x`;
-  return `${m}x`;
-}
 
 export function registerStatusCommand(program: Command): void {
   program
@@ -25,11 +18,7 @@ export function registerStatusCommand(program: Command): void {
           console.log(`  ${icon} ${name} (v${version})${multi}`);
 
           if (s.supportedModels && s.supportedModels.length > 0) {
-            const modelLines = s.supportedModels.map(m => {
-              const info = COPILOT_MODEL_INFO.find(i => i.name === m);
-              return info ? `${m} (${formatMultiplier(info.multiplier)})` : m;
-            });
-            console.log(`     models: ${modelLines.join(", ")}`);
+            console.log(`     models: ${s.supportedModels.join(", ")}`);
           }
         }
       } catch (err) {
