@@ -15,11 +15,13 @@ bccg is an MCP server + CLI that orchestrates multiple AI CLIs (Claude Code, Git
 ## Features
 
 - **Auto-routing** — `cheap-first`, `quality-first`, `balanced` strategies pick the right CLI for each prompt
-- **Multi-model via Copilot** — Access Claude, GPT, Gemini models through a single Copilot CLI with `--model`
-- **Pipeline DSL** — Chain CLIs: `gemini:summarize -> codex:analyze -> claude:judge`
+- **Parallel execution** — `parallel` strategy runs all adapters concurrently and combines results
+- **Multi-model via Copilot** — Access 18 models (Claude, GPT, Gemini, Grok) through a single Copilot CLI
+- **Pipeline DSL** — Chain CLIs: `gemini:summarize -> codex:implement -> claude:review`
 - **MCP server** — Expose all capabilities as MCP tools (`bccg_run`, `bccg_pipeline`, `bccg_status`)
-- **Recursion guard** — `BCCG_DEPTH` env prevents infinite loops when a host CLI invokes bccg which spawns the same CLI
-- **Zero config** — `bccg init` auto-detects installed CLIs and registers the MCP server
+- **Config-driven routing** — `.ccg/config.yaml` with custom routing rules and adapter settings
+- **Recursion guard** — `BCCG_DEPTH` env prevents infinite loops when a host CLI invokes bccg
+- **Zero config** — `bccg init` auto-detects installed CLIs, generates config, and registers MCP
 
 ## Requirements
 
@@ -60,11 +62,17 @@ bccg run --adapter claude "review this code"
 
 # 5. Use Copilot's multi-model routing
 bccg run --adapter copilot --model opus "analyze complexity"
+
+# 6. Chain CLIs in a pipeline
+bccg pipeline "gemini:summarize -> claude:review" -p "explain MCP protocol"
+
+# 7. Run all CLIs in parallel
+bccg run --strategy parallel "explain recursion in one sentence"
 ```
 
 ## CLI Reference
 
-### `bccg run <prompt>`
+### `bccg run [prompt]`
 
 Run a prompt through AI CLIs.
 
@@ -72,8 +80,12 @@ Run a prompt through AI CLIs.
 |---|---|---|
 | `-s, --strategy <name>` | Routing strategy | `balanced` |
 | `-a, --adapter <name>` | Use a specific adapter (`copilot`, `claude`, `codex`, `gemini`) | auto |
-| `-m, --model <model>` | Model for intra-CLI routing (e.g. `opus`, `sonnet`, `codex`) | adapter default |
+| `-m, --model <model>` | Model for intra-CLI routing (e.g. `opus`, `sonnet`, `grok`) | adapter default |
 | `-t, --timeout <ms>` | Timeout in milliseconds | per-adapter default |
+| `--json` | Output result as JSON | |
+| `--verbose` | Show routing decisions | |
+
+Supports stdin: `echo "prompt" | bccg run -`
 
 **Strategies:**
 
@@ -82,21 +94,53 @@ Run a prompt through AI CLIs.
 | `cheap-first` | Route to the lowest-cost available CLI |
 | `quality-first` | Route to the highest-cost (best quality) CLI |
 | `balanced` | Classify the prompt, pick the best tier for the task type |
-| `parallel` | Run on all available CLIs (sequential in v0.1) |
+| `parallel` | Run all available CLIs concurrently, combine results |
 
-Output goes to stdout, metadata (`adapter=`, `model=`, `latency=`) to stderr.
+Output goes to stdout, metadata to stderr.
+
+### `bccg pipeline <steps>`
+
+Execute a multi-step CCG pipeline.
+
+```bash
+bccg pipeline "gemini:summarize -> codex:implement -> claude:review" -p "add retry logic"
+```
+
+| Option | Description |
+|---|---|
+| `-p, --prompt <prompt>` | Base prompt for the pipeline |
+| `-t, --timeout <ms>` | Timeout in milliseconds |
+| `--json` | Output result as JSON |
 
 ### `bccg status`
 
-Show installed CLIs, versions, and multi-model support.
+Show installed CLIs, versions, and supported models.
 
 ```
 $ bccg status
-  ✅ copilot v1.0.5 — multi-model
-     Models: claude-sonnet-4.5, claude-opus-4.6, gpt-5.3-codex, gemini-3-pro, ...
-  ✅ claude v1.0.16
-  ❌ codex — not installed
-  ✅ gemini v0.3.1
+  ✅ copilot (v1.0.19) [multi-model]
+     models: claude-sonnet-4.5, claude-opus-4.6, gpt-5.3-codex, gemini-3.1-pro, ...
+  ✅ claude (v2.1.92)
+  ✅ codex (v0.107.0)
+  ✅ gemini (v0.31.0)
+```
+
+### `bccg doctor`
+
+Check bccg health: adapters, config, and MCP registration.
+
+```
+$ bccg doctor
+📋 Config
+  ✅ .ccg/config.yaml
+📄 .mcp.json
+  ✅ .mcp.json
+🔌 Adapters
+  ✅ copilot (1.0.19) [multi-model]
+  ✅ claude (2.1.92)
+🔗 MCP Registration
+  ✅ claude → ~/.claude.json
+⚠️  2 issue(s) found. Run 'bccg init' to fix most of them.
 ```
 
 ### `bccg init`
@@ -105,7 +149,8 @@ Auto-detect CLIs and configure bccg.
 
 1. Scans for `copilot`, `claude`, `codex`, `gemini`
 2. Generates `.ccg/config.yaml` with detected adapters
-3. Registers bccg as an MCP server in each CLI's config
+3. Creates `.mcp.json` for project-local MCP config
+4. Registers bccg as an MCP server in each CLI's global config
 
 ### `bccg serve`
 
@@ -157,13 +202,13 @@ Each step runs sequentially. The output of each step feeds into the next as cont
 
 ```bash
 # Summarize with Gemini, then review with Claude
-gemini:summarize -> claude:review
+bccg pipeline "gemini:summarize -> claude:review" -p "explain MCP"
 
-# Use Copilot with a specific model for analysis, then Codex for implementation
-copilot:opus:analyze -> codex:implement
+# Use Copilot with a specific model, then Codex
+bccg pipeline "copilot:opus:analyze -> codex:implement" -p "add caching"
 
 # Three-step pipeline
-gemini:summarize -> codex:refactor -> claude:judge
+bccg pipeline "gemini:summarize -> codex:refactor -> claude:judge" -p "optimize auth"
 ```
 
 **Format:**
@@ -172,6 +217,40 @@ gemini:summarize -> codex:refactor -> claude:judge
 - `action` — auto-route the step
 
 Max 10 steps per pipeline.
+
+## Configuration
+
+`bccg init` generates `.ccg/config.yaml`:
+
+```yaml
+version: 1
+defaults:
+  strategy: balanced
+  timeout: 60000
+adapters:
+  copilot:
+    enabled: true
+    binary: copilot
+    costTier: medium
+    multiModel: true
+  claude:
+    enabled: true
+    binary: claude
+    costTier: high
+  gemini:
+    enabled: true
+    binary: gemini
+    costTier: free
+routing:
+  rules:
+    - condition: { type: reasoning }
+      target: claude
+      fallback: copilot
+    - condition: { type: summarize }
+      target: gemini
+```
+
+Routing rules are checked before strategy-based routing. Set `enabled: false` to skip an adapter.
 
 ## Architecture
 
@@ -218,27 +297,35 @@ Dependency graph: `adapter-base → adapters → core → mcp-server + cli`
 
 ## Copilot Multi-Model
 
-Copilot CLI is the only adapter with `--model` support, enabling intra-CLI model routing. Short aliases are provided:
+Copilot CLI supports 18 models via `--model`. Short aliases are provided:
 
 | Alias | Model |
 |---|---|
 | `opus` | `claude-opus-4.6` |
+| `opus-fast` | `claude-opus-4.6-fast` |
 | `sonnet` | `claude-sonnet-4.5` |
-| `codex` | `gpt-5.3-codex` |
-| `gemini` | `gemini-3-pro` |
 | `haiku` | `claude-haiku-4.5` |
+| `codex` | `gpt-5.3-codex` |
+| `gpt` | `gpt-5.4` |
+| `gpt-mini` | `gpt-5.4-mini` |
+| `gemini` | `gemini-3.1-pro` |
+| `flash` | `gemini-3-flash` |
+| `grok` | `grok-code-fast-1` |
 
 ```bash
-bccg run --adapter copilot --model opus "complex reasoning task"
-bccg run --adapter copilot --model codex "implement this feature"
+bccg run -a copilot -m opus "complex reasoning task"
+bccg run -a copilot -m grok "quick code review"
+bccg run -a copilot -m flash "summarize this"
 ```
+
+Any model string not in the alias list is passed through as-is.
 
 ## Development
 
 ```bash
 pnpm install          # Install dependencies
 pnpm build            # Build all packages
-pnpm test             # Run all tests
+pnpm test             # Run all tests (133 tests)
 pnpm test -- --watch  # Watch mode
 pnpm lint             # Type-check (tsc --noEmit)
 pnpm clean            # Remove all dist/ directories
