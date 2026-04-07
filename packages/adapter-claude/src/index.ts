@@ -78,7 +78,8 @@ export class ClaudeAdapter implements ModelAdapter {
       try {
         const result = await execa("claude", ["--version"], { reject: false });
         if (result.exitCode === 0) {
-          version = result.stdout?.trim() ?? null;
+          const raw = result.stdout?.trim() ?? "";
+          version = raw.match(/\d+\.\d+\.\d+/)?.[0] ?? raw.split("\n")[0];
         }
       } catch {
         // ignore
@@ -95,7 +96,8 @@ export class ClaudeAdapter implements ModelAdapter {
     try {
       const result = await execa("claude", ["--version"], { reject: false });
       const installed = result.exitCode === 0;
-      const version = installed ? (result.stdout?.trim() ?? null) : null;
+      const raw = result.stdout?.trim() ?? "";
+      const version = installed ? (raw.match(/\d+\.\d+\.\d+/)?.[0] ?? raw.split("\n")[0]) : null;
 
       return {
         installed,

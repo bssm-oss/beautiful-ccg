@@ -12,8 +12,8 @@ import { COPILOT_MODELS, resolveModel } from "./models.js";
 
 export { parseCopilotOutput } from "./parser.js";
 export type { CopilotParsed } from "./parser.js";
-export { COPILOT_MODELS, MODEL_ALIASES, resolveModel } from "./models.js";
-export type { CopilotModel } from "./models.js";
+export { COPILOT_MODELS, COPILOT_MODEL_INFO, MODEL_ALIASES, resolveModel, getModelMultiplier } from "./models.js";
+export type { CopilotModel, CopilotModelInfo } from "./models.js";
 
 export class CopilotAdapter implements ModelAdapter {
   readonly name = "copilot";
@@ -81,7 +81,8 @@ export class CopilotAdapter implements ModelAdapter {
     try {
       const result = await execa("copilot", ["--version"], { reject: false });
       const installed = result.exitCode === 0;
-      const version = installed ? (result.stdout?.trim() ?? null) : null;
+      const raw = result.stdout?.trim() ?? "";
+      const version = installed ? (raw.match(/\d+\.\d+\.\d+/)?.[0] ?? raw.split("\n")[0]) : null;
 
       return {
         installed,
