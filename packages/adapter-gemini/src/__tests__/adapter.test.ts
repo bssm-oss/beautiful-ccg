@@ -78,7 +78,7 @@ describe("GeminiAdapter", () => {
       await adapter.run("hello");
 
       const callArgs = mockedExeca.mock.calls[0];
-      const opts = callArgs[2] as Record<string, unknown>;
+      const opts = (callArgs as unknown[])[2] as Record<string, unknown>;
       const env = opts.env as Record<string, string>;
       expect(env.BCCG_DEPTH).toBe("3");
     });
@@ -91,7 +91,7 @@ describe("GeminiAdapter", () => {
       await adapter.run("hello");
 
       const callArgs = mockedExeca.mock.calls[0];
-      const opts = callArgs[2] as Record<string, unknown>;
+      const opts = (callArgs as unknown[])[2] as Record<string, unknown>;
       const env = opts.env as Record<string, string>;
       expect(env.BCCG_DEPTH).toBe("1");
     });

@@ -105,6 +105,9 @@ importers:
 
   packages/cli:
     dependencies:
+      '@beautiful-ccg/adapter-base':
+        specifier: workspace:*
+        version: link:../adapter-base
       '@beautiful-ccg/adapter-claude':
         specifier: workspace:*
         version: link:../adapter-claude
@@ -155,6 +158,9 @@ importers:
 
   packages/mcp-server:
     dependencies:
+      '@beautiful-ccg/adapter-base':
+        specifier: workspace:*
+        version: link:../adapter-base
       '@beautiful-ccg/core':
         specifier: workspace:*
         version: link:../core
