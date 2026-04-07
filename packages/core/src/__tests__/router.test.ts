@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import type { ModelAdapter, CostTier } from "@beautiful-ccg/adapter-base";
+import type { ModelAdapter, CostTier, BccgConfig } from "@beautiful-ccg/adapter-base";
 import { route } from "../router.js";
 
 function createMockAdapter(name: string, costTier: CostTier, multiModel = false): ModelAdapter {
@@ -90,5 +90,73 @@ describe("route()", () => {
 
   it("throws when no adapters available", () => {
     expect(() => route("do something", "balanced", [])).toThrow("No available adapters");
+  });
+
+  describe("config routing rules", () => {
+    it("uses config rule when condition matches", () => {
+      const gemini = createMockAdapter("gemini", "free");
+      const claude = createMockAdapter("claude", "high");
+      const config: BccgConfig = {
+        version: 1,
+        defaults: { strategy: "balanced", timeout: 60000 },
+        adapters: {},
+        routing: {
+          rules: [
+            { condition: { type: "reasoning" }, target: "claude" },
+          ],
+        },
+      };
+      const plan = route("review this carefully", "balanced", [gemini, claude], config);
+      expect(plan.steps[0].adapter).toBe("claude");
+    });
+
+    it("falls through to strategy when no rule matches", () => {
+      const gemini = createMockAdapter("gemini", "free");
+      const claude = createMockAdapter("claude", "high");
+      const config: BccgConfig = {
+        version: 1,
+        defaults: { strategy: "balanced", timeout: 60000 },
+        adapters: {},
+        routing: {
+          rules: [
+            { condition: { type: "coding" }, target: "codex" },
+          ],
+        },
+      };
+      // "summarize" won't match "coding" rule
+      const plan = route("summarize this", "cheap-first", [gemini, claude], config);
+      expect(plan.steps[0].adapter).toBe("gemini"); // cheap-first picks free tier
+    });
+
+    it("rule with fallback sets fallback on step", () => {
+      const gemini = createMockAdapter("gemini", "free");
+      const claude = createMockAdapter("claude", "high");
+      const config: BccgConfig = {
+        version: 1,
+        defaults: { strategy: "balanced", timeout: 60000 },
+        adapters: {},
+        routing: {
+          rules: [
+            { condition: { type: "reasoning" }, target: "claude", fallback: "gemini" },
+          ],
+        },
+      };
+      const plan = route("analyze this bug", "balanced", [gemini, claude], config);
+      expect(plan.steps[0].adapter).toBe("claude");
+      expect(plan.steps[0].fallback).toBe("gemini");
+    });
+
+    it("skips rules for parallel strategy", () => {
+      const gemini = createMockAdapter("gemini", "free");
+      const claude = createMockAdapter("claude", "high");
+      const config: BccgConfig = {
+        version: 1,
+        defaults: { strategy: "balanced", timeout: 60000 },
+        adapters: {},
+        routing: { rules: [{ condition: { type: "reasoning" }, target: "claude" }] },
+      };
+      const plan = route("review this", "parallel", [gemini, claude], config);
+      expect(plan.steps).toHaveLength(2); // parallel ignores rules
+    });
   });
 });

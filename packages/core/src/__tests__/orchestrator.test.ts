@@ -100,6 +100,85 @@ describe("Orchestrator", () => {
     expect(result.finalOutput).toBe("claude-output");
   });
 
+  it("run() with parallel strategy calls all adapters concurrently", async () => {
+    const registry = new Registry();
+    const gemini = createMockAdapter("gemini", "free");
+    const claude = createMockAdapter("claude", "high");
+    const codex = createMockAdapter("codex", "medium");
+    registry.register(gemini);
+    registry.register(claude);
+    registry.register(codex);
+
+    (gemini.run as ReturnType<typeof vi.fn>).mockResolvedValue(makeResult("gemini", "gemini-out"));
+    (claude.run as ReturnType<typeof vi.fn>).mockResolvedValue(makeResult("claude", "claude-out"));
+    (codex.run as ReturnType<typeof vi.fn>).mockResolvedValue(makeResult("codex", "codex-out"));
+
+    const orch = new Orchestrator(registry);
+    const result = await orch.run("test", { strategy: "parallel" });
+
+    expect(result.model).toBe("parallel");
+    expect(result.adapter).toContain("gemini");
+    expect(result.adapter).toContain("claude");
+    expect(result.adapter).toContain("codex");
+    expect(result.output).toContain("gemini-out");
+    expect(result.output).toContain("claude-out");
+    expect(result.output).toContain("codex-out");
+    expect((gemini.run as ReturnType<typeof vi.fn>).mock.calls).toHaveLength(1);
+    expect((claude.run as ReturnType<typeof vi.fn>).mock.calls).toHaveLength(1);
+    expect((codex.run as ReturnType<typeof vi.fn>).mock.calls).toHaveLength(1);
+  });
+
+  it("run() with parallel strategy tolerates partial failures", async () => {
+    const registry = new Registry();
+    const gemini = createMockAdapter("gemini", "free");
+    const claude = createMockAdapter("claude", "high");
+    registry.register(gemini);
+    registry.register(claude);
+
+    (gemini.run as ReturnType<typeof vi.fn>).mockRejectedValue(new Error("gemini down"));
+    (claude.run as ReturnType<typeof vi.fn>).mockResolvedValue(makeResult("claude", "claude-out"));
+
+    const orch = new Orchestrator(registry);
+    const result = await orch.run("test", { strategy: "parallel" });
+
+    expect(result.output).toContain("claude-out");
+    expect(result.output).not.toContain("gemini");
+  });
+
+  it("run() with parallel strategy throws when all adapters fail", async () => {
+    const registry = new Registry();
+    const gemini = createMockAdapter("gemini", "free");
+    const claude = createMockAdapter("claude", "high");
+    registry.register(gemini);
+    registry.register(claude);
+
+    (gemini.run as ReturnType<typeof vi.fn>).mockRejectedValue(new Error("fail"));
+    (claude.run as ReturnType<typeof vi.fn>).mockRejectedValue(new Error("fail"));
+
+    const orch = new Orchestrator(registry);
+    await expect(orch.run("test", { strategy: "parallel" })).rejects.toThrow("All parallel adapters failed");
+  });
+
+  it("run() uses config defaults.strategy when no strategy specified", async () => {
+    const registry = new Registry();
+    const gemini = createMockAdapter("gemini", "free");
+    const claude = createMockAdapter("claude", "high");
+    registry.register(gemini);
+    registry.register(claude);
+
+    const config = {
+      version: 1,
+      defaults: { strategy: "cheap-first" as const, timeout: 60000 },
+      adapters: {},
+    };
+
+    const orch = new Orchestrator(registry, config);
+    const result = await orch.run("do something");
+
+    // cheap-first should pick gemini (free tier)
+    expect(result.adapter).toBe("gemini");
+  });
+
   it("status() returns availability for all registered adapters", async () => {
     const registry = new Registry();
     const claude = createMockAdapter("claude", "high", true);
