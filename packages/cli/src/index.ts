@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name("bccg")
   .description("Run Claude, ChatGPT, and Gemini together — with whatever CLI you already have.")
-  .version("0.2.0");
+  .version("0.3.0");
 
 registerRunCommand(program);
 registerPipelineCommand(program);

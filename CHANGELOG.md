@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-04-07
+
+### Added
+
+- **OpenCode CLI adapter** — 5th adapter, BYOK multi-model with 75+ providers
+- Dynamic model discovery via `opencode models` (120+ models, cached)
+- NDJSON output parsing (text events, step_start metadata)
+- New package: `@beautiful-ccg/adapter-opencode`
+- 16 new tests (149 total, 19 test files)
+
 ## [0.2.0] - 2026-04-07
 
 ### Added

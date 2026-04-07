@@ -5,7 +5,7 @@ import type { Orchestrator } from "@beautiful-ccg/core";
 export function createServer(orchestrator: Orchestrator): McpServer {
   const depth = Number(process.env.BCCG_DEPTH ?? "0");
 
-  const server = new McpServer({ name: "bccg", version: "0.2.0" });
+  const server = new McpServer({ name: "bccg", version: "0.3.0" });
 
   server.tool(
     "bccg_run",
