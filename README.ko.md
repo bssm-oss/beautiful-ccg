@@ -1,6 +1,6 @@
 # beautiful-ccg (bccg)
 
-[![CI](https://github.com/bssm-oss/beautiful-ccg/actions/workflows/ci.yml/badge.svg)](https://github.com/bssm-oss/beautiful-ccg/actions/workflows/ci.yml)
+[![CI](https://github.com/justn-hyeok/beautiful-ccg/actions/workflows/ci.yml/badge.svg)](https://github.com/justn-hyeok/beautiful-ccg/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@beautiful-ccg/cli)](https://www.npmjs.com/package/@beautiful-ccg/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
@@ -41,7 +41,7 @@ bccg는 여러 AI CLI(Claude Code, GitHub Copilot, OpenAI Codex, Google Gemini)�
 npm install -g @beautiful-ccg/cli
 
 # 또는 소스에서 빌드
-git clone https://github.com/bssm-oss/beautiful-ccg.git
+git clone https://github.com/justn-hyeok/beautiful-ccg.git
 cd beautiful-ccg
 pnpm install && pnpm build
 cd packages/cli && pnpm link --global

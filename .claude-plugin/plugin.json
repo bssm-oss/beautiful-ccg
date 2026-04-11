@@ -2,9 +2,9 @@
   "name": "beautiful-ccg",
   "version": "0.1.0",
   "description": "Route prompts across Claude, Copilot, Codex, and Gemini with pipeline chaining and strategy-based routing",
-  "author": "bssm-oss",
+  "author": "justn-hyeok",
   "license": "MIT",
-  "homepage": "https://github.com/bssm-oss/beautiful-ccg",
+  "homepage": "https://github.com/justn-hyeok/beautiful-ccg",
   "mcp": {
     "command": "bccg",
     "args": ["serve"]
