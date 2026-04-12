@@ -8,18 +8,15 @@ describe("createOrchestrator()", () => {
     expect(orchestrator).toBeInstanceOf(Orchestrator);
   });
 
-  it("registers all 4 adapters in the registry", () => {
+  it("registers all 5 adapters in the registry", () => {
     const orchestrator = createOrchestrator();
-    // status() calls checkAvailability on each registered adapter
-    // We verify all 4 are present by checking status keys
-    return orchestrator.status().then((status) => {
-      const names = Object.keys(status);
-      expect(names).toContain("copilot");
-      expect(names).toContain("claude");
-      expect(names).toContain("codex");
-      expect(names).toContain("gemini");
-      expect(names).toContain("opencode");
-      expect(names).toHaveLength(5);
-    });
+    // Use registry.getAll() to check adapter names without calling checkAvailability()
+    const names = orchestrator.registry.getAll().map((a) => a.name);
+    expect(names).toContain("copilot");
+    expect(names).toContain("claude");
+    expect(names).toContain("codex");
+    expect(names).toContain("gemini");
+    expect(names).toContain("opencode");
+    expect(names).toHaveLength(5);
   });
 });

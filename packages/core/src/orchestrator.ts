@@ -12,7 +12,7 @@ import { runPipeline } from "./pipeline.js";
 
 export class Orchestrator {
   constructor(
-    private registry: Registry,
+    readonly registry: Registry,
     private config?: BccgConfig,
   ) {}
 
