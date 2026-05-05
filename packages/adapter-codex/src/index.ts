@@ -19,7 +19,8 @@ export class CodexAdapter implements ModelAdapter {
 
   async run(prompt: string, options?: RunOptions): Promise<AdapterResult> {
     const depth = Number(process.env.BCCG_DEPTH ?? "0");
-    const args: string[] = ["exec", prompt, "--json", "--full-auto"];
+    const args: string[] = ["exec", prompt, "--json"];
+    if (options?.allowAutonomous) { args.push("--full-auto"); }
 
     const env: Record<string, string> = {
       ...(process.env as Record<string, string>),

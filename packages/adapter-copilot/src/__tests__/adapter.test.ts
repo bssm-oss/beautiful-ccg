@@ -53,7 +53,21 @@ describe("CopilotAdapter", () => {
 
       expect(mockedExeca).toHaveBeenCalledWith(
         "copilot",
-        ["-p", "hello world", "-s", "--output-format", "json", "--allow-all-tools"],
+        ["-p", "hello world", "-s", "--output-format", "json"],
+        expect.objectContaining({ reject: false }),
+      );
+    });
+
+    it("adds --allow-all-tools only when allowAutonomous is true", async () => {
+      mockedExeca.mockResolvedValueOnce(
+        makeExecaResult({ stdout: makeJsonlOutput("claude-sonnet-4.5", "response") }) as never,
+      );
+
+      await adapter.run("hello", { allowAutonomous: true });
+
+      expect(mockedExeca).toHaveBeenCalledWith(
+        "copilot",
+        ["-p", "hello", "-s", "--output-format", "json", "--allow-all-tools"],
         expect.objectContaining({ reject: false }),
       );
     });
@@ -67,7 +81,7 @@ describe("CopilotAdapter", () => {
 
       expect(mockedExeca).toHaveBeenCalledWith(
         "copilot",
-        ["-p", "hello", "-s", "--output-format", "json", "--allow-all-tools", "--model", "claude-opus-4.6"],
+        ["-p", "hello", "-s", "--output-format", "json", "--model", "claude-opus-4.6"],
         expect.objectContaining({ reject: false }),
       );
     });
@@ -81,7 +95,7 @@ describe("CopilotAdapter", () => {
 
       expect(mockedExeca).toHaveBeenCalledWith(
         "copilot",
-        ["-p", "hello", "-s", "--output-format", "json", "--allow-all-tools", "--model", "claude-opus-4.6"],
+        ["-p", "hello", "-s", "--output-format", "json", "--model", "claude-opus-4.6"],
         expect.objectContaining({ reject: false }),
       );
     });

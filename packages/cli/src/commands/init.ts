@@ -18,9 +18,9 @@ interface CliInfo {
 }
 
 const CLI_DEFS: Omit<CliInfo, "installed" | "version">[] = [
-  { name: "copilot", binary: "copilot", headless: ["-p", "-s", "--output-format", "json", "--allow-all-tools"], costTier: "medium", capabilities: ["coding", "reasoning", "analysis"], multiModel: true, models: ["claude-opus-4.6", "gpt-5.3-codex", "gemini-3-pro", "claude-haiku-4.5"] },
+  { name: "copilot", binary: "copilot", headless: ["-p", "-s", "--output-format", "json"], costTier: "medium", capabilities: ["coding", "reasoning", "analysis"], multiModel: true, models: ["claude-opus-4.6", "gpt-5.3-codex", "gemini-3-pro", "claude-haiku-4.5"] },
   { name: "claude", binary: "claude", headless: ["-p", "--output-format", "json"], costTier: "high", capabilities: ["reasoning", "coding", "analysis"] },
-  { name: "codex", binary: "codex", headless: ["exec", "--json", "--full-auto"], costTier: "medium", capabilities: ["coding", "testing", "refactoring"] },
+  { name: "codex", binary: "codex", headless: ["exec", "--json"], costTier: "medium", capabilities: ["coding", "testing", "refactoring"] },
   { name: "gemini", binary: "gemini", headless: ["-p", "--output-format", "json"], costTier: "free", capabilities: ["summarize", "generate", "quick-analysis"] },
   { name: "opencode", binary: "opencode", headless: ["run", "--format", "json"], costTier: "free", capabilities: ["coding", "reasoning", "analysis", "refactoring"], multiModel: true },
 ];

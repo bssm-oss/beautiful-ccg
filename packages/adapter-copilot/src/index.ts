@@ -22,7 +22,8 @@ export class CopilotAdapter implements ModelAdapter {
 
   async run(prompt: string, options?: RunOptions): Promise<AdapterResult> {
     const depth = Number(process.env.BCCG_DEPTH ?? "0");
-    const args: string[] = ["-p", prompt, "-s", "--output-format", "json", "--allow-all-tools"];
+    const args: string[] = ["-p", prompt, "-s", "--output-format", "json"];
+    if (options?.allowAutonomous) { args.push("--allow-all-tools"); }
 
     if (options?.model) {
       args.push("--model", resolveModel(options.model));
